@@ -2,12 +2,13 @@ import React, { useCallback, useState , useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import service from '../../appwrite/config'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Input, RTE, Select } from '../index'
+import { addPost, editPost } from '../../store/postSlice'
 
 
 //addPost and EditPosts(props => post)
-//postCard => image and title card
+
 export default function PostForm({ post }){
     const [image, setImage] = useState(null);
 
@@ -22,6 +23,7 @@ export default function PostForm({ post }){
 
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
+    const dispatch = useDispatch();
 
     const submit = async (data) => {
         if (post) {
@@ -38,6 +40,7 @@ export default function PostForm({ post }){
             });
 
             if (dbPost) {
+                dispatch(editPost({title: dbPost.title, featuredImage: dbPost.featuredImage,content: dbPost.content, status: dbPost.status}));
                 navigate(`/post/${dbPost.$id}`);
             }
         }
@@ -49,6 +52,7 @@ export default function PostForm({ post }){
                 const dbPost = await service.createPost({ ...data, userId: userData.$id, featuredImage: data.image });
 
                 if (dbPost) {
+                    dispatch(addPost({...dbPost}));
                     navigate(`/post/${dbPost.$id}`);
                 }
             }

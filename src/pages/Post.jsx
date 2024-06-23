@@ -1,25 +1,16 @@
-// import React from 'react'
-
-// function Post() {
-//   return (
-//     <div>Post</div>
-//   )
-// }
-
-// export default Post 
-
-
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import appwriteService from "../appwrite/config";
 import { Button, Container } from "../components";
 import parse from "html-react-parser";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost } from "../store/postSlice";
 
 export default function Post() {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.auth.userData);
 
@@ -32,25 +23,30 @@ export default function Post() {
                 else navigate("/");
             });
         } else navigate("/");
+
     }, [slug, navigate]);
 
-    const deletePost = () => {
+    // console.log(post);
+
+    const deletPost = () => {
         appwriteService.deletePost(post.$id).then((status) => {
             if (status) {
-                appwriteService.deleteFile(post.featuredImage);
+                appwriteService.deleteFile(post.featuredImage)
                 navigate("/");
             }
-        });
+
+            dispatch(deletePost(post.$id));
+        })
     };
 
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+                <div className="w-full  max-w-xl flex justify-center mb-4 relative border rounded-xl p-2 mx-auto">
                     <img
                         src={appwriteService.getFilePreview(post.featuredImage)}
                         alt={post.title}
-                        className="rounded-xl"
+                        className="rounded-xl  w-full"
                     />
 
                     {isAuthor && (
@@ -60,7 +56,7 @@ export default function Post() {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button bgColor="bg-red-500" onClick={deletPost}>
                                 Delete
                             </Button>
                         </div>

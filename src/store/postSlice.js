@@ -1,29 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    posts: [{id:1, title: "",content:"",featuredImage:""}]  
+    posts: []  
 }
 
 const postSlice = createSlice({
     name: "posts",
     initialState,
     reducers: {
-        addPost: (state,action) => {
+        Posts : (state,action) => {
+            state.posts = action.payload
+        },
+        addPost: (state,action) => { 
             state.posts.push(action.payload);
         },
         deletePost: (state,action) => {
-            state.posts = state.posts.filter((post)=>{
-                post.id !== action.payload.id
-            })
+            state.posts = state.posts.filter((post)=>
+                post.$id !== action.payload
+            )
         },
         editPost: (state,action) => {
-            state.posts = state.posts.map((post)=>{
-                post.id === action.payload.id ? {...action.payload} : post 
-            })
+            state.posts = state.posts.map((post)=>
+                post.$id === action.payload.$id ? {
+                    ...post,
+                    title: action.payload.title,
+                    featuredImage: action.payload.featuredImage,
+                    status: action.payload.status,
+                    content: action.payload.content,
+                } : post 
+            )
         }
     }
 })
 
-export const {addPost,editPost,deletePost} = postSlice.actions;
+export const {addPost,editPost,deletePost,Posts} = postSlice.actions;
 
 export default postSlice.reducer;

@@ -26,7 +26,7 @@ function Header() {
         },
         {
             name: "All Posts",
-            url: "/all-post",
+            url: "/all-posts",
             active: authStatus
         },
         {
@@ -37,9 +37,9 @@ function Header() {
     ]
 
     return (
-        <header className='py-3 shadow bg-gray-500'>
+        <header className='py-3 shadow bg-black bg-opacity-90'>
             <Container>
-                <nav className='flex'>
+                <nav className='flex items-center'>
                     <div className='mr-4'>
                         <Link to="/"> <Logo /> </Link>
                     </div>
@@ -49,7 +49,7 @@ function Header() {
                             item.active ? (
                                 <li key={item.name}>
                                     <button
-                                        className='px-6 py-2 hover:bg-blue-100 rounded-full inline-block'
+                                        className='px-6 py-2 text-white hover:bg-white hover:text-black rounded-full inline-block'
                                         onClick={() => navigate(item.url)}
                                     >
                                         {item.name}

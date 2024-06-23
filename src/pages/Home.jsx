@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import service from '../appwrite/config';
 import { Container, PostCard } from '../components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Posts } from '../store/postSlice';
 
 function Home() {
-  const [posts, setPosts] = useState([]);
+  const [posts,setPosts] = useState([]);
   const authStatus = useSelector((state)=> state.auth.status);
+  // const dispatch = useDispatch();
+
+  const AllPosts = useSelector((state)=> state.postSl.posts);
+
 
   useEffect(() => {
-    service.getPosts().then((posts) => {
-      // console.log(posts.documents)
-      if (posts) setPosts(posts.documents);
-    })
-  }, [])
+    // service.getPosts()
+    //   .then((posts) => {
+    //     if (posts) {
+    //       console.log(posts.documents);
+    //       setPosts(posts.documents);
+    //     }
+    //   })
+      
+  
+    setPosts(AllPosts);
+    console.log(posts)
+
+  }, [AllPosts])
+
 
   if(authStatus == false){
     return (
@@ -45,11 +59,11 @@ function Home() {
     )
   }
   return (
-    <div>
+    <div className='w-full m-6 p-4'>
       <Container>
-        <div className='flex flex-wrap'>
+        <div className='flex flex-wrap justify-between'>
           {posts.map((post) => (
-            <div key={post.$id}>
+            <div key={post.$id} className='flex flex-grow-0 flex-shrink w-1/4 items-stretch h-60'>
               <PostCard {...post} />
             </div>
           ))}
