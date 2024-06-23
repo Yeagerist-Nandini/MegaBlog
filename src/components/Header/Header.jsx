@@ -51,7 +51,7 @@ function Header() {
                                     <button
                                         className='px-6 py-2 text-white hover:bg-white hover:text-black rounded-full inline-block'
                                         onClick={() => navigate(item.url)}
-                                    >
+                                    > 
                                         {item.name}
                                     </button>
                                 </li>
